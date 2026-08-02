@@ -31,8 +31,13 @@
 
 		/* Example entgendy-change highlight */
 		span.entgendy-change  {
-			cursor: help;
 			position: relative;
+		}
+
+		/* Example for the "show original on hover" tooltip */
+		span.entgendy-tooltip-example {
+			cursor: help;
+			text-decoration: underline dotted;
 		}
 		span.entgendy-change[style*=engendy-mode-nb]::before {
 			content: "";
@@ -71,8 +76,10 @@
 						Toolbar-Icon anzeigen</label></div><br>
 				<div class="input"><input type="checkbox" id="invertiert"><label>Toolbar-Icon für dunkle Themes</label>
 				</div><br>
+				<div class="input"><input type="checkbox" id="tooltip"><label>Originaltext anzeigen, wenn man mit der Maus über eine
+						Veränderung fährt (<span title="Bürgerinnen und Bürger" class="entgendy-tooltip-example">Beispiel</span>)</label></div><br>
 				<div class="input"><input type="checkbox" id="hervorheben"><label>Die Veränderungen
-					<span title="Text dass ersetzt wurde als tooltip" class="entgendy-change">im Text hervorheben (unveränderter Text als Tooltip)</span></label></div><br>
+					<span class="entgendy-change">im Text hervorheben</span></label></div><br>
 				<div class="input" style="width: 100%; white-space: nowrap; display: inline-flex;">
 					<label for="hervorheben_style" style="vertical-align: center; padding: 7px 0;">Hervorhebungs CSS: &nbsp;</label>
 					<select id="hervorheben-beispiele">

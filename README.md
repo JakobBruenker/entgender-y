@@ -21,6 +21,10 @@ Ziel des Entgendern ist es, den Geschlechtsbezug aus der Sprache zu entfernen (i
 Personen die als Mann oder Frau angesprochen werden, werden auch weiterhin als Mann oder Frau angesprochen. Weiterer Vorteil: Da das «gendern» bereits Markierungen im Text setzt, funktioniert das «entgendern» sehr zuverlässig.
 Entgendy entgendert Binnen-I, Gendersterne, Bindestriche, Unterstriche, Doppelformen, trennende Punkte und Partizipien (optional).
 
+**Originaltext anzeigen:** In den Einstellungen lässt sich die Option «Originaltext anzeigen, wenn man mit der Maus über eine Veränderung fährt» aktivieren.
+Fährt man dann mit der Maus über ein umgewandeltes Wort, zeigt ein Tooltip den unveränderten Text der Webseite an (z.B. «Bürgys» → «Bürgerinnen und Bürger»).
+Die Option funktioniert unabhängig von der Hervorhebung und ist standardmässig ausgeschaltet.
+
 
 Viel Spass mit der Erweiterung! Für einen freundlichen, gerechten, entsexualisierten, respektvollen, inkludierenden Umgang miteinander! &#127752; &#9829; &#9872; &#9873;
 

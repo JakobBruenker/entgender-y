@@ -10,6 +10,8 @@ export interface BeGoneSettings {
     counter?: boolean;
     hervorheben?: boolean;
     hervorheben_style?: string;
+    // Zeigt den unveränderten Originaltext als Tooltip, wenn man über eine Änderung fährt
+    tooltip?: boolean;
     filterliste?: FilterType;
 }
 

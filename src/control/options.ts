@@ -34,6 +34,7 @@ function saveOptions() {
             invertiert: querySelector<HTMLInputElement>("#invertiert").checked,
             hervorheben: querySelector<HTMLInputElement>("#hervorheben").checked,
             hervorheben_style: querySelector<HTMLInputElement>("#hervorheben_style").value,
+            tooltip: querySelector<HTMLInputElement>("#tooltip").checked,
             doppelformen: querySelector<HTMLInputElement>("#doppelformen").checked,
             partizip: querySelector<HTMLInputElement>("#partizip").checked,
             skip_topic: querySelector<HTMLInputElement>("#skip_topic").checked,
@@ -68,6 +69,7 @@ function restoreOptions() {
         querySelector<HTMLInputElement>("#invertiert").checked = res.invertiert;
         querySelector<HTMLInputElement>("#hervorheben").checked = res.hervorheben;
         querySelector<HTMLInputElement>("#hervorheben_style").value = res.hervorheben_style;
+        querySelector<HTMLInputElement>("#tooltip").checked = res.tooltip;
         querySelector<HTMLInputElement>("#doppelformen").checked = res.doppelformen;
         querySelector<HTMLInputElement>("#partizip").checked = res.partizip;
         querySelector<HTMLInputElement>("#skip_topic").checked = res.skip_topic;

@@ -19,6 +19,7 @@ const DefaultSettings: Required<Settings> = {
     blacklist: "stackoverflow.com\ngithub.com\nhttps://developer\nhttps://de.wikipedia.org/wiki/Gendersternchen",
     hervorheben_style: "text-decoration: underline wavy blue;",
     hervorheben: false,
+    tooltip: false,
 };
 
 

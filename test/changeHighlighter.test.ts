@@ -31,6 +31,20 @@ describe('Doppelnennung', () => {
         expect(div.innerHTML).to.be.equal(`Nach intensiven Coachings durch <span title="Expert*innen" style="style-foo" class="entgendy-change">Expertys</span> haben die Zehntklässler einen Beratungsraum geschaffen. Unter dem Motto „von <span title="Schüler*innen" style="style-foo" class="entgendy-change">Schülys</span> für <span title="Schüler*innen" style="style-foo" class="entgendy-change">Schülys</span>“ bieten sie Unterstützung für <span title="Mitschüler*innen" style="style-foo" class="entgendy-change">Mitschülys</span> an, die Rassismus erfahren haben.`);
     });
 
+    it('Originaltext als Tooltip, ohne Hervorhebung', () => {
+        let div = textBefore("steht den Bürgerinnen und Bürgern das");
+        highlighter.apply(div.firstChild as CharacterData, "steht den Bürgys das", "", true);
+
+        expect(div.innerHTML).to.be.equal(`steht den <span title="Bürgerinnen und Bürgern" style="" class="entgendy-change">Bürgys</span> das`);
+    });
+
+    it('Ohne Tooltip wird der Originaltext nicht gespeichert', () => {
+        let div = textBefore("steht den Bürgerinnen und Bürgern das");
+        highlighter.apply(div.firstChild as CharacterData, "steht den Bürgys das", "style-foo", false);
+
+        expect(div.innerHTML).to.be.equal(`steht den <span style="style-foo" class="entgendy-change">Bürgys</span> das`);
+    });
+
     it('Highlight für sich folgende wörter', () => {
         let div = textBefore("der/die Bürgerinnen und Bürgern jugendliche*r Professor*in");
         highlighter.apply(div.firstChild as CharacterData, "das Bürgys jugendliche Professory", "style-foo");

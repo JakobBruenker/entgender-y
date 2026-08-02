@@ -264,6 +264,17 @@ export class BeGone {
         return new Replacement(String.raw`(\n|\r|\r\n)`, "ig", " ", "").replace(s, counter);
     }
 
+    /**
+     * Combines several replacement steps into a single text transformation.
+     *
+     * This has to be a single transformation, because applyToNodes() may replace a text node by
+     * several new nodes (see ChangeHighlighter). Running the steps one after the other over the same
+     * node list would apply all but the first step to nodes that are no longer part of the document.
+     */
+    private static combine(modifiers: Array<(this: void, s: string) => string>): (this: void, s: string) => string {
+        return (s: string) => modifiers.reduce((text, modify) => modify(text), s);
+    }
+
     private applyToNodes(nodes: Array<CharacterData>, modifyData: (this: void, s: string) => string) {
         const textnodes = nodes;
         for (let i = 0; i < textnodes.length; i++) {
@@ -295,9 +306,11 @@ export class BeGone {
 
             // this.log(node.data ,"!== ??", newText);
             if (node.data !== newText) {
-                if (this.settings.hervorheben) {
-                    // highlight the changed words with some <span>
-                    this.changeHighlighter.apply(node, newText, this.settings.hervorheben_style);
+                const hervorheben = !!this.settings.hervorheben;
+                const tooltip = !!this.settings.tooltip;
+                if (hervorheben || tooltip) {
+                    // wrap the changed words in some <span>, to highlight them and/or to show the original text on hover
+                    this.changeHighlighter.apply(node, newText, hervorheben ? (this.settings.hervorheben_style || "") : "", tooltip);
                 } else {
                     node.data = newText;
                 }
@@ -312,22 +325,25 @@ export class BeGone {
         if (probeResult.probeBinnenI || this.settings.doppelformen && probeResult.probeRedundancy || this.settings.partizip && probeResult.probePartizip || probeResult.probeArtikelUndKontraktionen) {
             let nodes = this.textNodesUnder(doc);
 
+            let modifiers = new Array<(this: void, s: string) => string>();
             if (this.settings.doppelformen && probeResult.probeRedundancy) {
-                this.applyToNodes(nodes, this.replacer.entferneDoppelformen);
+                modifiers.push(this.replacer.entferneDoppelformen);
             }
             if (this.settings.partizip && probeResult.probePartizip) {
-                this.applyToNodes(nodes, this.replacer.entfernePartizip);
+                modifiers.push(this.replacer.entfernePartizip);
             }
             if (probeResult.probeBinnenI) {
-                this.applyToNodes(nodes, this.replacer.entferneBinnenIs);
+                modifiers.push(this.replacer.entferneBinnenIs);
             }
             if (this.settings.partizip && probeResult.probeGefluechtete) {
-                this.applyToNodes(nodes, this.replacer.ersetzeGefluechteteDurchFluechtlinge);
+                modifiers.push(this.replacer.ersetzeGefluechteteDurchFluechtlinge);
             }
 
             if (probeResult.probeArtikelUndKontraktionen) {
-                this.applyToNodes(nodes, this.replacer.artikelUndKontraktionen);
+                modifiers.push(this.replacer.artikelUndKontraktionen);
             }
+
+            this.applyToNodes(nodes, BeGone.combine(modifiers));
 
             if (this.settings.counter) {
                 this.sendCounttoBackgroundScript();
@@ -369,19 +385,23 @@ export class BeGone {
     private entferneInserted(nodes: Array<CharacterData>) {
         this.log("entferneInserted");
         if (!this.settings.skip_topic || this.settings.skip_topic && (this.mtype == "ondemand" || !/Binnen-I/.test(document.body.textContent ? document.body.textContent : ""))) {
+            let modifiers = new Array<(this: void, s: string) => string>();
             if (this.settings.doppelformen) {
-                this.applyToNodes(nodes, this.replacer.entferneDoppelformen);
+                modifiers.push(this.replacer.entferneDoppelformen);
             }
             if (this.settings.partizip) {
-                this.applyToNodes(nodes, this.replacer.entfernePartizip);
+                modifiers.push(this.replacer.entfernePartizip);
             }
-            this.applyToNodes(nodes, this.replacer.entferneBinnenIs);
+            modifiers.push(this.replacer.entferneBinnenIs);
 
             if (this.settings.partizip) {
-                this.applyToNodes(nodes, this.replacer.ersetzeGefluechteteDurchFluechtlinge);
+                modifiers.push(this.replacer.ersetzeGefluechteteDurchFluechtlinge);
             }
 
-            this.applyToNodes(nodes, this.replacer.artikelUndKontraktionen);
+            modifiers.push(this.replacer.artikelUndKontraktionen);
+
+            this.applyToNodes(nodes, BeGone.combine(modifiers));
+
             if (this.settings.counter) {
                 this.sendCounttoBackgroundScript();
             }

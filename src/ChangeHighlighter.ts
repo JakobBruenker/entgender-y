@@ -10,18 +10,22 @@ const ELEMENTS_NOT_SUPPORTING_SPAN = ["TITLE", "OPTION"];
 
 export class ChangeHighlighter {
     // Create a span element that visually represents the change.
-    // This element highlights the new text and stores the original text in a tooltip.
-    createChangeElement(doc: Document, from: string, to: string, style: string) {
+    // This element highlights the new text and - if showOriginal is set - stores the original text in a tooltip.
+    createChangeElement(doc: Document, from: string, to: string, style: string, showOriginal: boolean = true) {
         const span = doc.createElement("span");
         span.textContent = to;
-        span.setAttribute('title', from);
+        if (showOriginal) {
+            // 'title' is used on purpose: the native tooltip also works inside iframes and (closed) shadow roots,
+            // where our content script CSS isn't applied.
+            span.setAttribute('title', from);
+        }
         span.setAttribute("style", style);
         span.classList.add("entgendy-change");
         return span;
     }
 
     // Apply changes from newText to the specified node, highlighting differences.
-    apply(node: CharacterData, newText: string, style: string = "") {
+    apply(node: CharacterData, newText: string, style: string = "", showOriginal: boolean = true) {
         let parentNode = node.parentNode as (Element | null);
         if (!parentNode || parentNode.nodeName in ELEMENTS_NOT_SUPPORTING_SPAN || !(parentNode.namespaceURI === null || parentNode?.namespaceURI === "http://www.w3.org/1999/xhtml")) {
             // This skips some html nodes, and all non-html (svg...)
@@ -48,7 +52,7 @@ export class ChangeHighlighter {
             }
             // Separate added text into main content and trailing space if present.
             let [_, addedText, space] = inProgressAdded.match(/^(.*?)(\s*)$/)!!;
-            newNodes.push(this.createChangeElement(doc, lastRemoved.trim(), addedText, style));
+            newNodes.push(this.createChangeElement(doc, lastRemoved.trim(), addedText, style, showOriginal));
             lastRemoved = "";
             inProgressAdded = "";
             // Add any trailing space as a separate text node.

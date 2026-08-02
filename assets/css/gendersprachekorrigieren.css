@@ -1,6 +1,10 @@
 span.entgendy-change  {
-    cursor: help;
     position: relative;
+}
+
+/* only show the help cursor where there actually is a tooltip with the original text */
+span.entgendy-change[title] {
+    cursor: help;
 }
 
 span.entgendy-change[style*=engendy-mode-nb]::before {

@@ -22,6 +22,7 @@ Features:
  + Ersetzt Doppelformen, Gender-Sternchen, Binnen-I, Unterstrich und Querstrich-Formen
  + Umwandlung berücksichtigt Artikel, Dativ, Akkusativ, Genitiv, Singular, Plural, Zeilenumbrüche, Gross/Kleinschreibung
  + Optional: Umwandlung von Partizipien
+ + Optional: zeigt den unveränderten Originaltext als Tooltip an, wenn man mit der Maus über eine Umwandlung fährt
  + Optional: zählt die Anzahl der Umwandlungen und zeigt diese im Icon an.
 
 Für einen freundlichen, respektvollen, inkludierenden Umgang miteinander! 🌈 ♥ ⚐ ⚑
