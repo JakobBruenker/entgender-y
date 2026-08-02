@@ -19,7 +19,10 @@ const code_coverage_usedReplacements = new Map<string, [boolean, Replacement]>()
  */
 let BinnenIMap: { [k: string]: string } = {
     // auch mittelpunkt (· \u00b7)
-    "{STERN}": String.raw`[\:\/\*\_-·’']{1,2}`,
+    // Achtung: der Bindestrich muss escaped werden. Unescaped ist "\_-·" eine Range
+    // von U+005F bis U+00B7, die u.a. alle Kleinbuchstaben enthält - und ausgerechnet
+    // den Bindestrich selbst nicht.
+    "{STERN}": String.raw`[\:\/\*\_\-·’']{1,2}`,
     "{KLO}": String.raw`[(\[{]`,
     "{KLC}": String.raw`[)\]}]`,
     "{BINI}": String.raw`[ïÏI]`,
