@@ -260,7 +260,7 @@ export class Phettberg implements SchreibAlternative {
                     return this.pluraly(p12) + (p14 ? p14 : "");
                 }
             }); //Bürgerinnen und Bürger
-            s = s.replace(/\b([Vv]on |[Ff]ür |[Mm]it |[Aa]ls |[Dd]ie |[Dd]er |[Dd]as )?(((zu )?d|jed|ein|ihr|zur|sein)(e|er|ie) )?(([a-zäöüß]{4,20}[enr]) )?([A-ZÄÖÜ][a-zäöüß]{2,})(en?|in)( und | oder | & | bzw\.? |[\/*_(-])(\1|vom )?((((zu )?d|jed|ein|ihr|zum|sein)(e[nrms])? )?(\7[nrms]? )?(\8(e?([snr])?)))\b/g, (match, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18) => {
+            s = s.replace(/\b([Vv]on |[Ff]ür |[Mm]it |[Aa]ls |[Dd]ie |[Dd]er |[Dd]as )?(((zu )?d|jed|ein|ihr|zur|sein)(e|er|ie) )?(([a-zäöüß]{4,20}[enr]) )?([A-ZÄÖÜ][a-zäöüß]{2,})(in)( und | oder | & | bzw\.? |[\/*_(-])(\1|vom )?((((zu )?d|jed|ein|ihr|zum|sein)(e[nrms])? )?(\7[nrms]? )?(\8(e?([snr])?)))\b/g, (match, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18) => {
                 this.replacementsDoppel++;
                 if (p1) {
                     if (p6 && !p17) {
@@ -311,7 +311,7 @@ export class Phettberg implements SchreibAlternative {
                     return this.pluraly(p14);
                 }
             }); //unregelmäßiger Plural: Bäuerinnen und Bauern
-            s = s.replace(/\b((von |für |mit |als )?((d|jed|ein|ihr|zum|sein)(e[rnms]?|ie) )?([A-Z][a-zäöüß]{3,20}[enr] )?([A-Z][a-zäöüß]{2,})(e?([nsr])?))( und | oder | & | bzw\.? |[\/*_(-])(\2|von der )?(((von |zu )?d|jed|ein|ihr|zur|sein)(e[rn]?|ie) )?\6?\7(in(nen)?|en?)\b/g, (match, p1) => {
+            s = s.replace(/\b((von |für |mit |als )?((d|jed|ein|ihr|zum|sein)(e[rnms]?|ie) )?([A-Z][a-zäöüß]{3,20}[enr] )?([A-Z][a-zäöüß]{2,})(e?([nsr])?))( und | oder | & | bzw\.? |[\/*_(-])(\2|von der )?(((von |zu )?d|jed|ein|ihr|zur|sein)(e[rn]?|ie) )?\6?\7(in(nen)?)\b/g, (match, p1) => {
                 this.log("21011");
                 this.replacementsDoppel++;
                 return this.pluraly(p1);

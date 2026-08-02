@@ -122,7 +122,16 @@ export const replacementTestStrings: [string, string][] = [
     ["Kreditkarte(n)", "Kreditkarte(n)"],
     ["2 Probestunde(n) übrig", "2 Probestunde(n) übrig"],
     ["Die Corona-Zahlen steigen und steigen: Letzte Ausfahrt Lockdown?", "Die Corona-Zahlen steigen und steigen: Letzte Ausfahrt Lockdown?"],
-    ["in eine Hardware-nähere Sprache", "in eine Hardware-nähere Sprache"]
+    ["in eine Hardware-nähere Sprache", "in eine Hardware-nähere Sprache"],
+    // Doppelformen brauchen eine weibliche Form auf einer Seite - "X und X" ist keine.
+    // upstream #12
+    ["Stunden und Stunden", "Stunden und Stunden"],
+    // upstream #14
+    ["Smartphone und der Smartphone-Firmware", "Smartphone und der Smartphone-Firmware"],
+    // upstream #11
+    ["ein PDF mit 23 Seiten und jede Seite in eine eigene PDF", "ein PDF mit 23 Seiten und jede Seite in eine eigene PDF"],
+    ["Tage und Tage", "Tage und Tage"],
+    ["die Regierung und der Regierungssprecher", "die Regierung und der Regierungssprecher"]
 ];
 
 replacementTestStrings.push(
