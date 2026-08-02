@@ -17,6 +17,10 @@ import {
     superPowerfulTextContentOf,
     SuperPowerfulTreeWalker
 } from "./superPowerfulDOMSearcher";
+import {looksGerman} from "./germanTextDetector";
+
+/** Entprellung der wiederholten Spracherkennung auf SPAs. */
+const LANGUAGE_RECHECK_DELAY_MS = 2000;
 
 export function urlFilterListToRegex(list: string | undefined): RegExp {
     return RegExp(list ? list.replace(/(\r\n|\n|\r)/gm, "|") : "");
@@ -61,6 +65,8 @@ export class BeGone {
     private replacer: SchreibAlternative;
     private readonly changeHighlighter = new ChangeHighlighter();
     private readonly changeAllowedChecker = new ChangeAllowedChecker();
+    private observerInstalled = false;
+    private languageWatcher: MutationObserver | undefined = undefined;
 
     constructor(replacer: SchreibAlternative = new Phettberg(), settings?: BeGoneSettings) {
         this.replacer = replacer;
@@ -137,11 +143,78 @@ export class BeGone {
 
         this.mtype = message.type;
         if (this.currentPageNotExcludedByWhitelistOrBlackList()) {
-            //Entfernen bei erstem Laden der Seite
-            this.entferneInitial(document);
+            // "Bei Bedarf" heisst: der Nutzer hat aufs Icon geklickt und will es explizit,
+            // dann wird die Spracherkennung übersprungen.
+            this.startWennDeutsch(document, message.type === "ondemand");
+        }
+    }
 
-            //Entfernen bei Seitenänderungen
-            this.installMutationObserver(document);
+    /**
+     * Startet nur, wenn die Seite überhaupt deutschen Text enthält - sonst bleibt lediglich
+     * ein billiger Beobachter liegen, der es später nochmal versucht.
+     */
+    private startWennDeutsch(doc: Document, ohnePruefung: boolean) {
+        if (ohnePruefung || looksGerman(this.textFuerSpracherkennung(doc))) {
+            this.start(doc);
+        } else {
+            this.watchForGerman(doc);
+        }
+    }
+
+    private start(doc: Document) {
+        this.stopLanguageWatcher();
+
+        //Entfernen bei erstem Laden der Seite
+        this.entferneInitial(doc);
+
+        //Entfernen bei Seitenänderungen
+        if (!this.observerInstalled) {
+            this.observerInstalled = true;
+            this.installMutationObserver(doc);
+        }
+    }
+
+    /**
+     * Bewusst nur body.textContent statt superPowerfulTextContentOf(): letzteres krault alle
+     * iframes und shadow roots durch und installiert dabei Observer - also genau die Arbeit,
+     * die auf einer nicht-deutschen Seite gespart werden soll. Deutscher Text, der
+     * ausschliesslich in einem iframe oder shadow root steht, wird dadurch nicht erkannt.
+     */
+    private textFuerSpracherkennung(doc: Document): string {
+        return doc.body ? (doc.body.textContent || "") : "";
+    }
+
+    /**
+     * Auf SPAs (reddit, X, ...) entsteht der deutsche Inhalt erst nach dem Laden oder nach einer
+     * client-seitigen Navigation. Deshalb bleibt ein entprellter MutationObserver liegen, der die
+     * Spracherkennung wiederholt. Bewusst ein normaler MutationObserver und nicht der
+     * SuperPowerfulMutationObserver, damit hier keine Krabbelarbeit über iframes und shadow roots anfällt.
+     */
+    private watchForGerman(doc: Document) {
+        if (this.languageWatcher || typeof MutationObserver === "undefined") {
+            return;
+        }
+        let pruefungLaeuft = false;
+        this.languageWatcher = new MutationObserver(() => {
+            if (pruefungLaeuft) {
+                return;
+            }
+            pruefungLaeuft = true;
+            setTimeout(() => {
+                pruefungLaeuft = false;
+                if (this.languageWatcher && looksGerman(this.textFuerSpracherkennung(doc))) {
+                    this.log("Spracherkennung: jetzt deutsch");
+                    this.start(doc);
+                }
+            }, LANGUAGE_RECHECK_DELAY_MS);
+        });
+        this.languageWatcher.observe(doc.body || doc.documentElement, {childList: true, subtree: true});
+    }
+
+    private stopLanguageWatcher() {
+        if (this.languageWatcher) {
+            this.languageWatcher.disconnect();
+            this.languageWatcher = undefined;
         }
     }
 
