@@ -131,7 +131,16 @@ export const replacementTestStrings: [string, string][] = [
     // upstream #11
     ["ein PDF mit 23 Seiten und jede Seite in eine eigene PDF", "ein PDF mit 23 Seiten und jede Seite in eine eigene PDF"],
     ["Tage und Tage", "Tage und Tage"],
-    ["die Regierung und der Regierungssprecher", "die Regierung und der Regierungssprecher"]
+    ["die Regierung und der Regierungssprecher", "die Regierung und der Regierungssprecher"],
+    // männlicher Plural vor der weiblichen Endung, upstream #6
+    ["Kollegen/innen", "Kollegys"],
+    ["Kollegen/-innen", "Kollegys"],
+    ["Kollegen*innen", "Kollegys"],
+    ["Kollegen:innen", "Kollegys"],
+    ["Kollegen_innen", "Kollegys"],
+    ["Studenten/innen", "Studentys"],
+    ["Kunden/innen", "Kundys"],
+    ["Beamten/innen", "Beamtys"]
 ];
 
 replacementTestStrings.push(

@@ -139,6 +139,10 @@ export class Phettberg implements SchreibAlternative {
             //Prüfung auf Ersetzung
             if (/[a-zäöüß](\/-?|_|\*|:|\.|\u00b7| und -)in\b/i.test(s) || /[a-zäöüß](\/-?|_|\*|:|\.|\u00b7| und -)inn([*.)])?en/i.test(s) || /[a-zäöüß]([(\/])in/i.test(s) || /[a-zäöüß]INNen/.test(s)) {
                 this.log("12100");
+                // "Kollegen/innen" ist "Kollegen" (männlicher Plural) + "/innen". Die männliche
+                // Pluralendung muss weg, sonst bleibt sie stehen und es entsteht "Kollegenys"
+                // statt "Kollegys". Wörter auf "-er" (Lehrer/innen) sind nicht betroffen. upstream #6
+                s = new Replacement(String.raw`([a-zäöüß])en(?=(\/-?|_|\*|:|·|\.)inn)`, "g", "\$1", "Kollegen/innen").replace(s, counter);
                 s = new Replacement(String.raw`(\/-?|_|\*|:|\u00b7|\.)inn(\*|\.|\/)?e(\*|\.|\/)?n`, "ig", "Innen", "Schüler/innen").replace(s, counter);
                 s = new Replacement(String.raw`([a-zäöüß])\(inn(en\)|\)en)`, "ig", "\$1Innen", "Schüler(innen)").replace(s, counter);
                 s = new Replacement(String.raw`([a-zäöüß])INNen`, "g", "\$1Innen", "SchülerINNen").replace(s, counter);
