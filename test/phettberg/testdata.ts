@@ -140,7 +140,13 @@ export const replacementTestStrings: [string, string][] = [
     ["Kollegen_innen", "Kollegys"],
     ["Studenten/innen", "Studentys"],
     ["Kunden/innen", "Kundys"],
-    ["Beamten/innen", "Beamtys"]
+    ["Beamten/innen", "Beamtys"],
+    // unbestimmter Artikel darf bei Doppelformen nicht verschwinden
+    ["eine Kandidatin oder einen Kandidaten", "ein Kandidaty"],
+    ["Mit der Erststimme wählst du eine Kandidatin oder einen Kandidaten aus deinem Wahlkreis.", "Mit der Erststimme wählst du ein Kandidaty aus deinem Wahlkreis."],
+    ["einer Lehrerin oder einem Lehrer", "einem Lehry"],
+    ["jede Schülerin oder jeden Schüler", "jedes Schüly"],
+    ["Das Amt einer Bürgermeisterin oder eines Bürgermeisters", "Das Amt eines Bürgermeistys"]
 ];
 
 replacementTestStrings.push(

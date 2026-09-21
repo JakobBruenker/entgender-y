@@ -237,10 +237,14 @@ export class Phettberg implements SchreibAlternative {
         };
 
         s = new Replacement(String.raw`(^[dD]+)(en|er|ie)`, "", "\$1as", "").replace(s, counter);
+        // unbestimmter Artikel ins Neutrum: "einen" -> "ein", "jeden" -> "jedes"
+        // (Dativ "einem" und Genitiv "eines" sind im Neutrum gleich wie im Maskulinum)
+        s = new Replacement(String.raw`^([jJ]ed)(e[rn]?)\b`, "", "\$1es", "jeden Schüler").replace(s, counter);
+        s = new Replacement(String.raw`^([kK]?[eE]in|[mMdDsS]ein|[iI]hr|[uU]nser|[eE]uer)(e[rn]?)\b`, "", "\$1", "einen Kandidaten").replace(s, counter);
         if (/(en|ern|er)$/.test(s)) {
             s = new Replacement(String.raw`(en|ern|er)$`, "", Const.y, "").replace(s, counter);
         } else if (/(ens|erns|ers|es)$/.test(s)) { // Genitiv
-            s = new Replacement(String.raw`(es)$`, "", Const.ys, "eines Arztes").replace(s, counter);
+            s = new Replacement(String.raw`(ens|erns|ers|es)$`, "", Const.ys, "eines Arztes").replace(s, counter);
         } else {
             s = s + Const.y;
         }
@@ -291,6 +295,11 @@ export class Phettberg implements SchreibAlternative {
                     this.log("21006");
                     if (startsWithCapitalLetter(p2)) {
                         return capitalize(this.singulary(p12));
+                    }
+                    // Der Artikel der zweiten Hälfte trägt den Kasus und darf nicht verlorengehen:
+                    // "eine Kandidatin oder einen Kandidaten" -> "ein Kandidaty"
+                    if (p13) {
+                        return this.singulary(p13 + p18);
                     }
                     return this.singulary(p8);
                 }

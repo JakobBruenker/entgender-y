@@ -152,6 +152,16 @@ export function insertDataOfFailingTestsInto(replacementTestStrings: TestDataTyp
             "gemeinsam mit einer Trägerin oder einem Träger",
             "gemeinsam mit einem Trägy" // Falsch "gemeinsam das Trägy"
         ],
+        [
+            // "kein" fehlt in der Artikelliste der Doppelform-Regex und wird als Adjektiv verschluckt
+            "keine Schülerin oder keinen Schüler",
+            "kein Schüly" // Falsch "Schüly"
+        ],
+        [
+            // ohne Artikel in der zweiten Hälfte bleibt nichts, was den Kasus trägt
+            "eine Kandidatin oder Kandidat",
+            "ein Kandidaty" // Falsch "Kandidaty"
+        ],
     ); // End doppel
 
 // Unnötig gegendert
